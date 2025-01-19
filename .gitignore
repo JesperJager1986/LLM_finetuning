@@ -4,3 +4,4 @@ poetry.lock
 .DS_store
 fine_tuned_distilbert/
 results
+__pycache__
