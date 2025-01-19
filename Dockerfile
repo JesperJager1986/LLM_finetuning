@@ -1,9 +1,13 @@
-FROM python:3.13
+FROM python:3.10
 
 WORKDIR /app
 COPY . /app
 
+RUN pip install --no-cache-dir numpy
+
 RUN pip install --no-cache-dir -r requirements.txt
+
+RUN pip install accelerate -U
 
 # Install PyCharm's debugger (pydevd)
 #RUN pip install pydevd-pycharm
