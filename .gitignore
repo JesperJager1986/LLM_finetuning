@@ -5,3 +5,4 @@ poetry.lock
 fine_tuned_distilbert/
 results
 __pycache__
+mlruns
