@@ -6,17 +6,18 @@ import pandas as pd
 class DatasetLoader:
     def __init__(self, config: Config):
         self.config = config
+        self.dataset = self.load_dataset(config.dataset_name)
 
-    #todo look into this function converted into pandas dataframe
-    def load_and_split(self):
+    @staticmethod
+    def load_dataset(name: str):
         print("Loading dataset...")
-        dataset = load_dataset(self.config.dataset_name)
-        train_dataset = dataset["train"].train_test_split(test_size=1-self.config.train_size)["train"]
-        test_dataset = dataset["train"].train_test_split(test_size=self.config.test_size)["test"]
+        return load_dataset(name)
 
-        self._describe_distribution(pd.Series(train_dataset["label"]))
-        self._describe_distribution(pd.Series(train_dataset["label"]))
-        return train_dataset, test_dataset
+    def load_and_split(self, name: str):
+        size = 1 - self.config.train_size if name == "train" else self.config.test_size
+        reduced_dataset = self.dataset[name].train_test_split(test_size=size)[name]
+        self._describe_distribution(pd.Series(reduced_dataset["label"]))
+        return reduced_dataset
 
     @staticmethod
     def _describe_distribution(labels: pd.Series) -> None:

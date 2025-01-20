@@ -10,10 +10,11 @@ class FineTuningPipeline:
         self.config = config
         self.dataset_loader = DatasetLoader(config)
         self.model_handler = ModelHandler(config)
-        self.train_dataset, self.test_dataset = self.dataset_loader.load_and_split()
-        self.model_handler.tokenize(self.train_dataset)
-        self.model_handler.tokenize(self.test_dataset)
-        self.trainer_handler = TrainerHandler(self.model_handler.model, self.model_handler.tokenizer, self.config, self.train_dataset, self.test_dataset)
+        self.train_dataset = self.dataset_loader.load_and_split("train")
+        self.test_dataset = self.dataset_loader.load_and_split("test")
+        self.train_tokens = self.model_handler.tokenize(self.train_dataset)
+        self.test_tokens = self.model_handler.tokenize(self.test_dataset)
+        self.trainer_handler = TrainerHandler(self.model_handler.model, self.model_handler.tokenizer, self.config, self.train_tokens, self.test_tokens)
         self.model_saver = ModelSaver(self.model_handler.model, self.model_handler.tokenizer, self.config)
 
     def run(self):
