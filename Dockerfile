@@ -1,18 +1,23 @@
+# Use an official Python image as the base
 FROM python:3.10
 
+# Set the working directory
 WORKDIR /app
+
+# Copy the application code
 COPY . /app
 
-RUN pip install --no-cache-dir numpy
+# Install dependencies in a single layer to minimize image size
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir numpy accelerate -U && \
+    pip install --no-cache-dir -r requirements.txt
 
-RUN pip install --no-cache-dir -r requirements.txt
+# Expose the MLflow UI port
+EXPOSE 5000
 
-RUN pip install accelerate -U
+# Expose the port for MLflow UI
+# Set environment variables for MLflow
+ENV MLFLOW_TRACKING_URI=http://0.0.0.0:5000
 
-# Install PyCharm's debugger (pydevd)
-#RUN pip install pydevd-pycharm
-
-# Make port 5678 available for debugging
-#EXPOSE 5678
-
-#CMD ["python", "main.py"]
+# Default command to run MLflow
+CMD ["mlflow", "server", "--host", "0.0.0.0", "--port", "5000"]
